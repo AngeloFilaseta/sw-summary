@@ -1,0 +1,37 @@
+\section{Introduzione}
+\subsection{Knowledge Graph}
+Si tratta di un una struttura dati (grafo) utilizzato per rappresentare informazioni. Ogni nodo rappresenta una \textbf{risorsa} o un \textbf{valore}, mentre gli archi rappresentano le \textbf{relazioni}.\newline
+Una tipla nodo-arco-nodo rappresenta un \textbf{Fatto}. Un Knowledge Graph quindi rappresenta la conoscenza coe un insieme di fatti connessi. Una struttura di questo tipo è necessaria per mantenere le informazioni in modo che possano essere salvati sia i concetti comuni che quelli distinti.
+\begin{info}[Esempio]
+	Plutone il 24 agosto 2006 è diventato un pianeta nano, ma i concetti variano anche in funzione dei campi di interessa. Ad un astronomo interessano certe informazioni, ad un astrologo altre. Come possiamo mantenere tutte le informazioni?
+	\begin{itemize}
+		\item Mantenere un unico "governatore unico" del concetto di Plutone che esprime qual è la visione "preferita" di quell'ambito. In questo caso vincerebbe una delle due strade tra astronomia e astrologia. Questo equivale ad un amministratore globale del dato, e questo è impraticabile.
+		\item Permettere a ciascuno di poter esprimere la propria opinione, rimuovendo controllori e amministratori del DB lasciando libertà totale nell'esprimere qualsiasi cosa. Il problema in questo caso è che il consumatore deve trovare ogni possibile punto di vista del concetto che vuole esprimere.
+	\end{itemize}
+	Utilizzando il grafo di conoscenza manteniamo la libertà, ma utilizziamo un modello che può aiutarci a mantenere tutte le informazioni che vogliamo.
+\end{info}
+Quello verso cui ci muoviamo è un grafico simile a questo:
+\centeredImage{document/img/graphmonna.PNG}{Esempio di Knowledge Graph desiderato}{0.6}
+(In questo esempio la dimensione dei nodi non ha alcun significato).\newline
+Per arrivare a questa modellazione dobbiamo usare concetti di programmazione orientata agli oggetti, ad esempio le gerarchie.\newline
+Per esempio, a casa Unibo, un professore può essere di tantissimi tipi: ricercatore, associato, associato confermato etc...\newline
+La parte fondamentale è mettersi d'accordo sulla definizione dei singoli concetti, di solito esistono organizzazioni apposite per le definizioni ad altri livelli (vedi esempio dei pianeti).\newline
+
+\begin{itemize}
+	\item \textbf{Tecnicità}:
+	\begin{itemize}
+		\item esistono formati standard per salvare i dati e usarli in più grafi (compresi i tipi di dati come stringhe, numeri etc.);
+		\item esistono linguaggi e database appositi per la gestione del dato;
+		\item esistono API per la maggior parte dei linguaggi.
+	\end{itemize}
+	\item \textbf{Semantica}:
+	\begin{itemize}
+		\item Esistono vocabolari per identificare univocamente risorse e le loro relazioni, grazie a repositories immense; 
+		\item Possibile utilizzarli per applicazioni di Machine Learning;
+	\end{itemize}
+	\item \textbf{Formalità}:
+	\begin{itemize}
+		\item I linguaggi seguono regole ben definite ed esistono motori di inferenza, o sistemi esperti (es: il sistema che giocando a scacchi ha battuto il campione mondiale);
+	\end{itemize}
+\end{itemize}
+\newpage

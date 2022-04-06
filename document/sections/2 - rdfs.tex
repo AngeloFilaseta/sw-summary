@@ -1,0 +1,158 @@
+\section{RDF Schema}
+RDF Schema è un linguaggio dichiarativo per arricchire l'espressività delle nostre informazioni. Saranno poi le applicazioni a capire come interpretare la conoscienza e a capire come affrontare le eccezioni, ovvero come fare se i dati non rispettano le condizioni degli schemi.\newline
+RDFSchema permette di:
+\begin{itemize}
+	\item definire classi che potranno poi essere istanziate attraverso \textbf{rdf:type};
+	\item definire proprietà e restrizioni;
+	\item definire gerarchie, sia a livello di classi che di proprietà.
+\end{itemize}
+
+\subsection{Elementi}
+\subsubsection{Classi}
+Anche le classi sono risorse. Servono per arrivare ad ottenere delle conclusioni attraverso il reasoner. La primitiva utilizzata per definire una classe è \textbf{rdfs:Class}. Tramite \textbf{rdfs:subClassOf} è possibile specificare che una classe è sottoclasse di un'altra. In questo caso tutte le istanze di $C$ sono anche istanze di $C'$, e tutte le proprietà di $C'$ possono essere ereditate da $C$.\newline
+Una classe persona può essere definita nel seguente modo:
+\begin{minted}{xml}
+	<rdfs:Class rdf:ID="Person"/>
+\end{minted}
+Le classi primitive Core sono:
+\begin{itemize}
+	\item \textbf{rdfs:Resource}: La classe di tutte le risorse (proprietà, classi, tutto quanto). Questa è la classe di qualsiasi cosa, quindi tutte le altre classi sono sottoclasse di questa.
+	\item \textbf{rdfs:Class}: La classe di tutte le classi, essendo le classi classi sono anche classe di questa superclasse classe.
+	\item \textbf{rdfs:Literal}: La classe di tutti i literal utilizzati in RDF.
+	\item \textbf{rdfs:Datatype}: La classe di tutti i tipi di dati, è anche sottoclasse di Literal.
+	\item \textbf{rdf:Property}: La classe di tutte le proprietà.
+	\item \textbf{rdf:Statement}: La classe degli elementi reificati.
+\end{itemize}
+
+\paragraph{SubClassOf}
+Possiamo creare nuove classi nella nostra nuova ontologia a partire anche da vocabolari differenti. Conoscendo il tipo di una risorsa possiamo spesso inferire informazioni aggiuntive attraverso l'entailment.
+\paragraph{Entailment}
+Significa che alcune triple sono presenti nel modello RDFS anche se non sono state da noi definite. Esistono alcune regole di implicazione che \textit{rdfs:subClassOf} porta con se.
+\begin{info}[Esempio di sillogismo classico]
+	\newline"Tutti gli uomini sono mortali" (premessa maggiore) \newline
+	"Socrate è un uomo" (premessa minore) \newline
+	"Socrate è mortale" (conclusione)\newline
+	può essere facilmente trasposto in RDFS:\newline
+	\textcolor{ao(english)}{ex:Man rdfs:SubclassOf ex:Mortal.}\newline
+	\textcolor{ao(english)}{ex:Socrates rdf:type ex:Man.}\newline
+	\textcolor{ao(english)}{ex:Socrates rdf:type ex:Mortal.}\newline
+	ma desidereremmo non dover esprimere la conclusione.
+\end{info}
+Esiste un documento RDFS che porta con se 14 regole di implicazione logica.
+\begin{info}[Regola rdfs9:]
+	\newline \textit{Utilizzata per indicare i sollogismi.}
+	\newline Le triple \textcolor{ao(english)}{"?s rdf:type ?c1."} e \textcolor{ao(english)}{?c1 rdfs:subClassOf ?c2."}\newline
+	implicano che:
+	\textcolor{ao(english)}{?s rdf:type ?c2}
+\end{info}
+
+\begin{info}[Regola rdfs4a e rdfs4b:]
+	\newline\textit{Ogni soggetto in una tripla è una risorsa:}\newline
+	Le triple \textcolor{ao(english)}{"?s rdf:type ?o."} implicano che \textcolor{ao(english)}{?s rdf:type rdfs:Resource."}\newline
+	\textit{Ogni oggetto in una tripla è una risorsa:}\newline
+	Le triple \textcolor{ao(english)}{"?s rdf:type ?o."} implicano che \textcolor{ao(english)}{?o rdf:type rdfs:Resource."}
+\end{info}
+
+\begin{info}[Regola rdfs8:]
+	\newline \textit{Ogni classe è anche risorsa:}\newline
+	Le triple \textcolor{ao(english)}{"?c rdf:type rdfs:Class."} implicano che \textcolor{ao(english)}{"?c rdf:subClassOf rdfs:Resource."}
+\end{info}
+
+\subsubsection{Proprietà}
+Vengono utilizzate per descrivere le caratteristiche delle classi del dominio di interesse. Servono per arricchire la conoscenza. Ci permettono di descrivere le caratteristiche di un'istanza rispetto che delle classi, ma anche le caratteristiche che legano tra loro più classi.\newline
+Alcune proprietà native e Core sono:
+\begin{itemize}
+	\item \textbf{rdf:type}: lega una risorsa alla sua classe.
+	\item \textbf{rdfs:subClassOf}: lega una classe alla sua super classe. Ogni istanza di una classe è anche istanza della sua super classe.
+	\item \textbf{rdfs:subPropertyOf}: lega una proprietà alla sua super proprietà. Ogni coppia di risorse che rispetta una proprietà rispetta necessariamente anche la super proprietà.
+\end{itemize}
+
+Le proprietà hanno un dominio e un range:
+\begin{itemize}
+	\item \textbf{Dominio}: tutte le istanze di triple che sono collegate con una specifica proprietà devono appartenere ad una certa classe.
+	\item \textbf{Range}: Vincolo sulla terza parte della tripla 
+\end{itemize}
+In questo esempio author è una proprietà. Specificando Dominio e Range viene inserito un vincolo sulle classi su cui la proprietà è utilizzabile.
+\centeredImage{document/img/domainrangeex.png}{Esempio di Domain e Range}{0.5}
+In questo modo possiamo aggiungere per qualsiasi istanza delle triple l'inferenza sui tipi:
+\centeredImage{document/img/domrangeins.png}{Inferenza dei tipi delle istanze nelle proprietà}{0.5}
+Sarà infatti compito del solo motore inferenziale aggiungere tutte queste dipendenze.\newline\newline
+\textbf{rdfs:range} è  un'istanza di proprietà (\textit{rdf:Property}). Scrivendo \textcolor{ao(english)}{P rdfs:range C} stiamo dicendo che il range della proprietà P è l'istanza della classe C. P è un'istanza della classe \textit{rdf:Property}.\newline\newline
+\textbf{rdfs:domain} è  un'istanza di proprietà (\textit{rdf:Property}). Scrivendo \textcolor{ao(english)}{P rdfs:domain C} in automatico vengono aggiunte  le triple che P è un'istanza di \textit{rdf:Property}, C è un'istanza di \textbf{rdf:Class} e il domain della proprietà P è istanza della classe C.
+\centeredImage{document/img/propertyinstance.png}{Esempio di definizione di una proprietà}{0.5}
+\begin{minted}{xml}
+	<rdf:Property rdf:ID=“emptiesInto”>
+	<rdfs:domain rdf:resource=“#River”/>
+	<rdfs:range rdf:resource=“#BodyOfWater”/>
+	</rdf:Property>
+\end{minted}
+
+\paragraph{rdf:type}
+Utilizzata per legare una risorsa ad una classe
+\centeredImage{document/img/rdftypeex.png}{Esempio di utilizzo di rdf:type}{0.5}
+\begin{minted}{xml}
+	<rdf:Description rdf:ID=“Yangtze”>
+	<rdf:type rdf:resource=“River”/>
+	</rdf:Description>
+\end{minted}
+
+\paragraph{rdf:subClassOf}
+Aggiungiamo che è una proprietà transitiva, il dominio è \textit{rdfs:Class} così come lo è il range.
+
+\paragraph{rdf:subPropertyOf}
+Aggiungiamo che è una proprietà transitiva, il dominio è \textit{rdfs:Property} così come lo è il range.
+
+\paragraph{rdfs:label, rdfs:comment e rdfs:seeAlso}
+Sono proprietà che vengono usate a solo scopo descrittivo. Il loro scopo è fornire descrizioni più human readable. Il domain è la classe \textit{rdf:Resource} mentre il range è \textbf{rdf:Literal}. Label viene utilizzato per meglio descrivere il nome della risorsa mentre Comment viene utilizzato per descriverla nella sua completezza. SeeAlso invece viene utilizzato per fornire informazioni aggiuntive, per esempio ad altre fonti. Esiste anche una sottoclasse di \textbf{rdfs:seeAlso} denominata \textbf{rdfs:isDefinedBy}
+
+\paragraph{Transitività delle proprietà}
+\begin{minted}{turtle}
+	?c1 rdfs:subClassOf ?c2.
+	?c2 rdfs:subClassOf ?c3.
+	?c1 rdfs:subClassOf ?c3.
+\end{minted}
+
+\begin{info}[Regola rdfs11:]
+	\textit{rdf:subClassOf} è transitiva:\newline
+	Le triple \textcolor{ao(english)}{"?c1 rdfs:subClassOf ?c2."} e \textcolor{ao(english)}{"?c2 rdfs:subClassOf ?c3."} implicano che \textcolor{ao(english)}{"?c1 rdfs:subClassOf ?c3."}
+\end{info}
+
+\begin{info}[Regola rdfs10:]
+	\textit{rdf:subClassOf} è anche riflessiva:\newline
+	Le triple \textcolor{ao(english)}{"c rdf:type rdfs:Class"} implicano che \textcolor{ao(english)}{"?c rdfs:subClassOf ?c"}
+\end{info}
+
+\noindent Ovviamente ogni predicato (la parte centrale di una tripla) deve essere di tipo rdf:Property. Questo è vero grazie ad una regola di implicazione.
+
+\begin{info}[Regola rdfs1:]
+	Tutti i predicati sono necessariamente proprietà:\newline
+	Le triple \textcolor{ao(english)}{"?s ?p ?o"} implicano che \textcolor{ao(english)}{"?p rdf:type rdf:Property"}
+\end{info}
+
+\begin{info}[Regole rdfs2 e rdfs3:]
+	Queste due regole esprimono il vincolo di dominio e il vincolo di range:\newline
+	Le triple \textcolor{ao(english)}{"?s ?p ?o."} e  \textcolor{ao(english)}{"?p
+		rdfs:domain ?t."} implicano che \textcolor{ao(english)}{"?s rdf:type ?t."}\newline
+	Le triple \textcolor{ao(english)}{"?s ?p ?o."} e  \textcolor{ao(english)}{"?p
+		rdfs:range ?t."} implicano che \textcolor{ao(english)}{"?o rdf:type ?t."}
+\end{info}
+
+\begin{info}[Regola rdfs7:]
+	Vengono aggiunte triple relative alle sottoproprietà:\newline
+	Le triple \textcolor{ao(english)}{"?s ?p1 ?o."} e  \textcolor{ao(english)}{"?p1
+		rdfs:subPropertyOf ?p2."} implicano che \textcolor{ao(english)}{"?s ?p2 ?o."}\newline
+\end{info}
+
+\begin{info}[Regole rdfs5 e rdfs6:]
+	subpropertyOf è sia transitiva che riflessiva:\newline
+	Le triple \textcolor{ao(english)}{"?p1 rdfs:subPropertyOf ?p2."} e  \textcolor{ao(english)}{"?p2 rdfs:subPropertyOf ?p3."} implicano che \textcolor{ao(english)}{"?p1 rdfs:subPropertyOf ?p3."}\newline
+	Le triple \textcolor{ao(english)}{"?p rdf:type rdf:Property"} implicano che \textcolor{ao(english)}{"?p rdfs:subPropertyOf ?p."}
+\end{info}
+
+\begin{warn}[Convenzioni]
+	Le classi vengono scritte con la prima lettera grande mentre le proprietà sono tutte in minuscolo.
+\end{warn}
+
+\subsection{Problemi con RDFS}
+RDFS non è necessariamente adatto per descrivere ad un sufficiente livello di dettaglio le risorse. Non è per esempio possibile limitare i range e i domain a classi diverse in base al contesto (non può essere usata la stessa proprietà ad un livello di dettaglio fine sia per gli umani che per gli alpaca). Non esistono vincoli di cardinalità e non è possibile avere regole di transitività, proprietà inverse e proprietà simmetriche oltre a quelle già offerte da \textit{rdfs:subClassOf} e \textit{rdfs:subPropertyOf} etc.
+\newpage

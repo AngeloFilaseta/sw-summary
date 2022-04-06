@@ -1,0 +1,68 @@
+\section{La logica di RDF e RDFS}
+Si può analizzare la rappresentazione della conoscenza intenta a rappresentare la realtà su tre livelli differenti:
+\begin{itemize}
+	\item \textbf{un modello concreto}: ci permette di esprimere fatti (Alice è la madre di Bob etc.). Questo modello è a tutti gli effetti RDF. 
+	\item \textbf{un modello concettuale}: ci permette di esprimere conoscenze su ciò di cui stiamo parlando (conoscenze terminologiche, ovvero cosa rappresenta uno specifico termine o una specifica regola). Questo modello è a tutti gli effetti RDFS, che però non è del tutto sufficiente e serve un linguaggio più riggo (es: Owl).
+	\item \textbf{un metamodello}: specifica degli strumenti formali utilizzati per definire il modello concettuale e il concreto.
+\end{itemize}
+
+\subsection{First Order Logic (FOL)}
+La conoscenza deve essere espressa in forma dichiarativa per poter essere gestita da un calcolatore. Il paradigma utilizzato è la logica matematica, con molti riferimenti alla logica dei predicati del primo ordine (First Order Logic (FOL)).\newline In FOL le rappresentazioni riguardano un insieme non vuoto di \textbf{individui}, detto universo o dominio. Per tutti gli individui è possibile specificare \textbf{relazioni} con altri individui e \textbf{proprietà} che li caratterizzano. I \textbf{fatti} sono proprietà su un determinato individuo (Luigi è un maschio) o una istanza di relazione (Antonella ha Mario come padre).
+
+FOL utilizza notazione matematica:
+\begin{itemize}
+	\item Quantificatore Universale: $\forall x$
+	\item Quantificatore Esistenziale: $\exists y$
+	\item Connettivo Bicondizionale: ... $\leftarrow\rightarrow$ ...
+	\item Connettivo di Congiunzione: ... $\land$ ...
+	\item Predicati Mono
+	argomentali: MADRE($x$)
+	\item Predicati Bi
+	argomentali: GENITORE($x$,$y$)
+\end{itemize}
+
+\noindent Se vogliamo far ragionare un computer per farlo arrivare a conclusioni dati i fatti in ingresso dobbiamo prima capire quanti e quali tipi di ragionamento esistono.
+\begin{itemize}
+	\item \textbf{deduttivo} (dalle premesse alle conclusioni). Quel tizio non respira ed è rigido, quindi è morto.
+	\item \textbf{abduttivo} (dagli effetti alle cause). La mela cade dall'albero, perché? Quali regole posso applicare per capire come e perché una mela cade?
+	\item \textbf{induttivo} (dallo specifico al generale). Se vedo che molti umani muoiono probabilmente tutti gli umani muoiono. In questo caso le leggi che deduciamo non sono assolute. Può sempre sbucare fuori un controesempio.
+\end{itemize}
+L'unico che può essere implementato e su cui si basano tutti i ragionamenti logici che possiamo creare con un algoritmo è il ragionamento \textbf{deduttivo}. Questo perché non si aggiunge alcun tipo di informazione aggiuntiva rispetto a quelle che già esistono.
+
+\begin{info}
+	Ad esempio, dati come premesse:
+	\begin{enumerate}
+		\item la definizione di “madre”.
+		\item il fatto che Laura è una donna.
+		\item il fatto che Laura è Genitore di Franco..
+	\end{enumerate}
+	Si può dedurre come conclusione che: \textbf{Laura è una MADRE}\newline\newline
+	Trasponiamo:
+	
+	Regola: $\forall x \quad (MADRE(x) \leftarrow\rightarrow DONNA(x) \land \exists y \quad GenDI(x,y)$
+	
+	$DONNA($Laura$)$
+	$GenDI($Laura, Franco$)$\newline
+	Quindi applicando su Laura la regola possiamo dire che lei è madre solo se deduciamo che lei è sia una donna che genitore di un qualche $y$:
+	
+	$(MADRE($Laura$) \leftarrow\rightarrow DONNA($Laura$) \land \exists y \quad GenDI($Laura$,$y$)$\newline
+	Deduciamo se esiste un y:
+	$\exists y \quad GenDI($Laura$,$y$)$
+	E una volta dedotto l'AND logico possiamo rimuovere $\leftarrow\rightarrow$ e affermare che Laura è una madre.
+\end{info}
+Il meccanismo di deduzione è una procedura di semi decisione. Se la conclusione è deducibile la procedura termina sempre in un numero finito di passi. Se la procedura non è deducibile potrebbe non terminare.
+\subsection{Knowledge Base}
+Una base di conoscenza è formata da due elementi fondamentali:
+\begin{itemize}
+	\item \textbf{Assertion Box (ABox)}: La parte di conoscenza che descrive il modello concreto del nostro frammento di realtà. Descrive i fatti in funzione delle istanze del dominio.
+	\item \textbf{Terminological Box (TBox)}: Permette di descrivere il modello concettuale del frammento di realtà (classi, schemi, etc.). Si tratta di un insieme di frasi, descrizioni e fatti che descrivono quali sono i concetti. Generalmente la forma degli statement è sempre la stessa: $\forall...\quad(...\Rightarrow...)$. Importante è che la TBox deve essere priva di ciclicità e di ridondanza. Non deve essere presente circolarità e che non ci si infili in un  calcolo deduttivo circolare che potrebbe portare ad un loop nel calcolo del reasoner.
+\end{itemize}
+\paragraph{RDFS è  valida}
+Valida significa che possiamo dedurre nuovi fatti a partire da quelli che abbiamo. Se $A$ è un insieme di triple RDF e $T$ è un insieme di triple RDFS (TBox). La semantica operazionale è valida se ogni fatto $f$ inferito da A e T è valida tramite le regole è una conseguenza logica.
+Scrivere $x \vdash y$ significa che $y$ può essere provato a partire da $x$. Scrivere  $x\models y$ significa che $x$ semanticamente implica $y$.
+
+\paragraph{RDFS è completa}
+Tutto cio' che può essere dedotto viene aggiunto tramite inferenza.
+$\forall f, if\ A \cup T \models f$ allora $A \cup T \vdash f$
+
+\noindent Una base di conoscenza rispetto ad una base dati è differente proprio nell'aspetto della deduzione e di poter condurre ragionamenti in modo automatico.

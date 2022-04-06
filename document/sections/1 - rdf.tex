@@ -1,0 +1,210 @@
+\section{RDF - Linguaggio Concreto}
+Il data model RDF è un grafo etichettato e orientato di nodi con due tipi principali di nodi.
+\begin{itemize}
+	\item \textbf{Nodi Risorse}: nodi non terminali che possono diventare a loro volte soggetti di altre triple.
+	\item \textbf{Nodi Literals}: nodi che esprimono valori finali (interi, numeri, stringhe, date, etc...)
+\end{itemize}
+RDF è un metodo generale per decomporre conoscenza in piccoli elementi (le triple). Attraverso tante triple è possibile costruire informazioni su concetti. Lo scopo è ottenere in dati in un formato abbastanza strutturato per fare in modo che applicazioni ne possano tratte vantaggio. Questo metodo è molto utile e ha il massimo della sua funzionalità anche se le informazioni sono distribuite.\newline\newline
+Esistono diversi modi per serializzare questo modello, ad esempio XML, Turtle, RDFa, JSON-LD, TriG etc...\newline
+RDF è composto da due documenti:
+\begin{itemize}
+	\item \textbf{Model and Syntax Specification}: espone la struttura fondamentale del modello RDF, descrivendo una possibile sintassi basata su XML;
+	\item \textbf{RDF Schema}: espone la sintassi per definire schemi e vocabolari di metainformazioni.
+\end{itemize}
+\subsection{RDF Triples}
+Una tripla racchiude un significato, una vera e propria frase. Un grafo RDF è una congiunzione (AND logico) delle sue triple. 
+\begin{itemize}
+	\item \textbf{Implicazione (Entailment)}: Un grafo $A$ implica un grafo $B$ se ogni possibile arrangiamento che risulta vero nel grafo $A$ è vero anche nel grafo $B$ (questo significa che non esistono contradizioni tra i due grafi). 
+	\item \textbf{Equivalenza (Equivalence)}: Due grafi $A$ e $B$ sono equivalenti se $A$ implica $B$ e $B$ implica $A$.
+	\item \textbf{Inconsistenza (Inconsistency)}: Un grafo è inconsistente se contiene una contradizione al suo interno. Non esiste un arrangiamento per avere a true un espressione.
+\end{itemize}
+Perché utilizzare triple?
+\centeredImage{document/img/triples.PNG}{Formato dei dati}{0.5}
+\noindent Il grafo si crea a partire da dati in formato "Soggetto"-"Predicato"-"Oggetto" dove Soggetto ed Oggetto sono nodi del grafo connessi da un Predicato che è l'arco.\newline
+Avendo a disposizione altre fonti è possibile effettuare un'operazione di "Merge" delle informazioni per creare un nuovo grafo
+a partire da quelli iniziali. Essendo una risorse univocamente determinata dal suo URI, due risorse sono la stessa risorsa solo se l'URI è identico. Grazie all'URI possiamo anche accedere alla semantica della risorsa, ovvero a tutte le altre informazioni che la risorsa porta con se.\newline
+La risorsa è univocamente determinata anche dal suo namespace, ovvero alla locazione, il dataset di riferimento, eccone alcuni dei primissimi:
+\begin{itemize}
+	\item \textbf{rdf} : Indica gli identificatori usati in RDF. L'URI globale per lo spazio dei nomi rdf è:\newline \url{http://www.w3.org/1999/02/22-rdf-syntax-ns#} 
+	\item \textbf{rdfs} : Indica gli identificatori usati per RDFS. L'URI globale per lo spazio dei nomi rdfs è:\newline \url{http://www.w3.org/2000/01/rdf-schema#} 
+	\item \textbf{skos}: Indica gli identificatori usati per il Simple Knowledge Organization System (SKOS), uno schema per la gestione distribuita dei vocabolari sul Web. L'URI globale per SKOS è:\newline
+	\url{http://www.w3.org/2004/02/skos/core}
+	\item \textbf{owl}: Indica gli identificatori usati per OWL. L'URI globale per lo spazio dei nomi OWL è:\newline
+	\url{http://www.w3.org/2002/07/owl#}
+\end{itemize}
+\subsubsection{Elementi}
+\paragraph{Risorse}
+Possiamo pensare ad una risorsa come ad un oggetto, una cosa (un libro, un autore, una città etc.). Ogni risorsa è identificata da un URI.
+\paragraph{Proprietà}
+Le proprietà sono tipi speciali di risorse. Esse descrivono relazioni tra risorse (è stato scritto da, età, titolo etc.) e quindi anche loro sono contraddistinte da un URI. 
+\paragraph{Statements}
+Gli statements sono le triple di tipo "Soggetto"-"Predicato"-"Oggetto", consistono in una \textbf{Risorsa}, una \textbf{Proprietà} ed un \textbf{Valore}, dove i valori possono essere sia altre risorse che dei literals (stringe, numeri, date etc.)
+\paragraph{Blank Nodes}
+Esistono anche dei blank node, ovvero dei nodi che hanno senso solo localmente (ovvero considerando il singolo grafo). La sintassi è infatti utilizzata in determinati modi in base alla struttura del grafo. Saranno poi i serializzatori a scegliere come comportarsi quando effettuare l'operazione di merge. In questo esempio si vuole modellare la relazione che ha un arbitro tra due specifici giocatori (per esempio di una partita a scacchi). Si noti come la \textbf{Description} interna non ha attribuito alcun ID.
+\centeredImage{document/img/blanknode.PNG}{Blank Node}{0.6}
+\begin{minted}{xml}
+	<rdf:Description rdf:id="X">
+	<referee>
+	<rdf:Description>
+	<player1 rdf:resource="#Y">
+	<player2 rdf:resource="#Z">
+	</rdf:Description>
+	</referee>
+	</rdf:Description>
+\end{minted}
+I Blank Node non hanno senso per descrivere una proprietà di una tripla, sono validi sono come soggetti o oggetti.
+\paragraph{Reificazione}
+Si tratta di un meccanismo abbastanza potente che permette di fornire rappresentazioni più ricche del fatto che si sta descrivendo.
+\begin{info}
+	Sappiamo ora rappresentare l'informazione \textit{Shakespeare ha scritto Amleto nel 1601}. Se vogliamo rappresentare il fatto \textit{Wikipedia dice che Shakespeare ha scritto Amleto} come possiamo fare?
+	Può essere utile in diverse necessità espressive:
+	\begin{itemize}
+		\item Provenienza (come nel caso appena riportato);
+		\item Similarità (descrivere una somiglianza tra concetti);
+		\item Contesto (spiegare in che contesto è avvenuto un certo evento etc.);
+		\item Periodo temporale (specificare quando è avvenuto un certo evento etc.)
+	\end{itemize}
+\end{info}
+
+\subsection{RDF/XML}
+Ogni file inizia con <rdf:RDF> e finisce con </rdf:RDF>. L'elemento principale utilizzato per descrivere una triple è <rdf:Description>. Il file format è $.rdf$.
+\begin{info}[Esempio]
+	\begin{minted}{xml}
+		<RDF>
+		<Description about="http://www.w3schools.com/RDF">
+		<author>Jan Egil Refsnes</author>
+		<homepage>http://www.w3schools.com</homepage>
+		</Description>
+		</RDF>
+	\end{minted}
+\end{info}
+
+\subsubsection{rdf:about \& rdf:id}
+Un \textbf{rdf:Description} ha:
+\begin{itemize}
+	\item un attributo \textbf{rdf:about} per indicare una risorsa che è stata già definita da qualche parte;
+	\item un attributo \textbf{rdf:ID} per indicare una risorsa appena definita.
+\end{itemize}
+\centeredImage{document/img/rdfexample.png}{Esempio di rdf:about ed rdf:id}{0.6}
+
+\subsubsection{rdf:resource}
+Utilizzato quando una risorsa ha a che fare con un'altra risorsa. Non desideriamo infatti che ci siano sovrapposizioni tra nomi e id, quindi quando vogliamo collegare risorse bisogna usare \textbf{rdf:resource}
+
+\begin{info}[Esempio]
+	\begin{minted}{xml}
+		<rdf:Description rdf:about="CIT1111">
+		<uni:courseName>Discrete Mathematics</uni:courseName>
+		<uni:isTaughtBy rdf:resource="949318"/>
+		</rdf:Description>
+		<rdf:Description rdf:about="949318">
+		<uni:name>David Billington</uni:name>
+		<uni:title>Associate Professor</uni:title>
+		</rdf:Description>
+	\end{minted}
+\end{info}
+
+\subsubsection{rdf:type}
+L'elemento \textbf{rdf:type} viene utilizzato per per legare un \textbf{rdf:Description} ad una classe.
+\begin{info}[Esempio]
+	\begin{minted}{xml}
+		<rdf:Description rdf:ID="CIT1111">
+		<rdf:type rdf:resource="http://www.mydomain.org/uni
+		ns#course"/>
+		<uni:courseName>Discrete Maths</uni:courseName>
+		<uni:isTaughtBy rdf:resource="#949318"/>
+		</rdf:Description>
+	\end{minted}
+\end{info}
+Le definizioni cominciano ad essere abbastanza verbose. Esistono regole per semplificare la sintassi mantenendo le informazioni invariate
+\paragraph{Regole di semplificazione}
+\begin{itemize}
+	\item Gli elementi che descrivono proprietà all'interno di \textbf{Description} che non hanno elementi figli al loro interno possono essere rese più semplici utilizzando attributi XML
+	\begin{info}[Esempio]
+		\begin{minted}{xml}
+			<rdf:Description rdf:ID="CIT1111">
+			<rdf:type rdf:resource="http://www.mydomain.org/unins#course"/>
+			<uni:courseName>Discrete Maths</uni:courseName>
+			</rdf:Description>
+			
+			<rdf:Description rdf:ID="CIT1111" uni:courseName="Discrete Maths">
+			<rdf:type rdf:resource="http://www.mydomain.org/unins#course"/>
+			</rdf:Description>
+		\end{minted}
+	\end{info}
+	\item Le Description che hanno un \textbf{rdf:type} possono essere utilizzate specificando direttamente il tipo anzichè utilizzare il tag \textbf{Description}.
+	\begin{info}[Esempio]
+		\begin{minted}{xml}
+			<rdf:Description rdf:ID="CIT1111">
+			<rdf:type rdf:resource="http://www.mydomain.org/unins#course"/>
+			<uni:courseName>Discrete Maths</uni:courseName>
+			</rdf:Description>
+			
+			<uni:course rdf:ID="CIT1111">
+			<uni:courseName>Discrete Maths</uni:courseName>
+			</uni:course>
+		\end{minted}
+	\end{info}
+\end{itemize}
+
+\subsubsection{rdf:type}
+
+\subsection{Liste}
+RDF distingue tra liste aperte e liste chiuse, ovvero contenitori in cui è possibile inserire altri elementi \textbf{(Container)} e contenitori in cui non è possibile farlo \textbf{(Collections)}.
+
+\paragraph{Containers}
+Il contenuto di un container è specificabile utilizzando le proprietà \textbf{rdf:\_1}, \textbf{rdf:\_2}, o alternativamente semplicemente \textbf{rdf:li}. Esistono tre tipi di contenitore:
+\begin{itemize}
+	\item \textbf{rdf:Bag}: Alcun ordine specificato, possibile avere elementi duplicati;
+	\item \textbf{rdf:Seq}: Specificato un ordine, possibile avere elementi duplicati;
+	\item \textbf{rdf:Alt}: Equivalente di un Set.
+\end{itemize}
+\centeredImage{document/img/bagexample.png}{Esempio di Bag}{0.9}
+\paragraph{Collections}
+La limitazione in questo caso è l'impossibilità di aggiungere o rimuovere elementi. Le liste vengono costruite grazie agli elementi rdf \textbf{List}, \textbf{first}, \textbf{rest}, \textbf{nil} ma per fortuna esiste anche un modo più compatto di definirle.
+\centeredImage{document/img/collectionexample.png}{Esempio di Collection}{0.9}
+
+è possibile specificare un tipo di dato utilizzando il namespace \textbf{xsd}. Segue un esempio in cui si specifica che l'età è un intero.
+\paragraph{Interi}
+\begin{info}[Esempio]
+	\begin{minted}{xml}
+		<rdf:Description rdf:about="949318">
+		<uni:name>David Billington</uni:name>
+		<uni:title>Associate Professor</uni:title>
+		<uni:age rdf:datatype="&xsd:integer">27<uni:age>
+		</rdf:Description>
+	\end{minted}
+\end{info}
+\subsection{Turtle}
+Turtle è una serializzazione differente e più coincisa rispetto ad XML. Anche in Turtle si possono usare i prefissi come in XML. Ogni tripla o insieme di triple è rappresentabile terminate da un punto. Vi sono inoltre alcuni metodi più coincisi per specificare qualcosa:
+\begin{itemize}
+	\item Si può utilizzare lo stesso soggetto per definire più triple in una volta sola, grazie all'uso di \textbf{;}:
+	\begin{info}[Esempio]
+		\begin{minted}{turtle}
+			doc:sw dcs:name "The Semantic Web"; 
+			dcs:isTaughtBy dcs:MZ .
+		\end{minted}
+	\end{info}
+	\item Per specificare l'\textbf{rdf:type} si può utilizzare \textbf{a}:
+	\begin{info}[Esempio]
+		\begin{minted}{turtle}
+			dcs:MZ a foaf:person .
+		\end{minted}
+	\end{info}
+	\item Si può utilizzare lo stesso soggetto e lo stesso predicato per definire più triple in una volta sola, grazie all'uso di \textbf{,}:
+	\begin{info}[Esempio]
+		\begin{minted}{turtle}
+			doc:sw dcs:isTaughtBy dcs:MZ,
+			dcs:NZ.
+		\end{minted}
+	\end{info}
+\end{itemize}
+
+\subsection{Blank Node}
+Per specificare un Blank Node Turtle utilizza le \textbf{[]}.
+\begin{info}[Esempio]
+	Per specificate che qualcuno conosce qualcun'altro il cui nome è Bob si scrive:
+	\begin{minted}{turtle}
+		[] foaf:knows [foaf:name "Bob"] .
+	\end{minted}
+\end{info}
+\newpage
