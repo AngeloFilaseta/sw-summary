@@ -1,0 +1,70 @@
+\section{Web Ontology Language (OWL)}
+
+\subsection{Le parti di un linguaggio ontologico}
+\begin{itemize}
+	\item \textbf{Concetti}: astrazioni del dominio applicativo tipicamente visti come insiemi.
+	\item \textbf{Relazioni}: esprimono l’esistenza di relazioni tra i concetti del dominio tipicamente.
+	viste come relazioni binarie tra gli individui.
+	\item \textbf{Assiomi}: formalizzano quali combinazioni di concetti e relazioni sono ammissibili.
+	\item \textbf{Individui}: elementi degli insiemi definiti dai concetti.
+	\item \textbf{Asserzioni}: dichiarano l’appartenenza di un individuo ad un insieme.
+	\item \textbf{Fatti}: legano due individui tramite una relazione.
+\end{itemize}
+
+\subsection{OWL - diverse tipologie}
+\centeredImage{document/img/owlspecies.png}{Tipologie di OWL}{0.5}
+\subsubsection{OWL Full}
+Utilizzando OWL Full è possibile utilizzare tutte le primitive del linguaggio OWL e combinarle tra loro in un qualsiasi modo. Questo permette anche di modificare alcune primitive di base. OWL Full è troppo pesante per poter essere utilizzato come linguaggio di modellazione.
+\subsubsection{OWL DL}
+DL sta per Description Logic. Una versione più snella di OWL Full. Ci sono restrizioni sui costrutti utilizzabili. Permette un efficiente supporto di reasoning.
+\subsubsection{OWL 2 Profiles}
+Sottolinguaggio di OWL 2, ha meno potere espressivo ma ha ottima efficienza nel reasoning. Utile in differenti scenari.
+
+\subsection{OWL e RDFS}
+OWL è costruito sopra RDFS ed utilizza alcuni dei suoi concetti:
+\begin{itemize}
+	\item owl:Thing owl:sameAs rdfs:Resource .
+	\item owl:Class owl:sameAs rdfs:Class .
+	\item “owl:Property” rdfs:subClassOf rdf:Property .
+	\item “owl:Individual” rdfs:subClassOf rdfs:Resource .
+\end{itemize}
+
+OWL riutilizza molti elementi di RDFS (rdf:type, rdf:Property, rdfs:subClassOf, rdfs:subPropertyOf,
+rdfs:domain, rdfs:range), altri sono solo rinominati (owl:Thing, owl:Class, owl:ObjectProperty), alcuni vengono anche specializzati.
+
+\subsection{Ontologia OWL}
+Una ontologia OWL può iniziare con un \textbf{owl:Ontology}. Non vengono aggiunti significati logici coi costrutti \textbf{owl:priorVersion}, \textbf{rdfs:comment} e \textbf{rdfs:label}. \textbf{owl:imports} (transitiva) invece permette di importare completamente altre ontologie. Questo significa che tutto il grafo delle ontologie inserite viene inserito nell'ontologia che si sta costruendo.
+
+\begin{minted}{xml}
+	<owl:Ontology rdf:about="">
+		<rdfs:comment>An example OWL ontology </rdfs:comment>
+		<owl:priorVersion
+			rdf:resource="http://www.mydomain.org/uni-ns-old"/>
+		<owl:imports
+			rdf:resource="http://www.mydomain.org/persons"/>
+		<rdfs:label>University Ontology</rdfs:label>
+	</owl:Ontology>
+\end{minted}
+
+Le ontologie vengono importate a catena, se O1 importa O2 e O2 importa O3, O1 importerà sia O2 che O3.
+
+\subsection{Classi di OWL}
+
+\textbf{owl:Class} è sottoclasse di \textbf{rdfs:Class}. Per dichiarare che una classe è disjoint da un altra si utilizza la property \textbf{owl:disjointWith}.\textbf{owl:equivalentClass} serve per definire l'equivalenza tra classi. \textbf{owl:Thing} è la classe più generale, \textbf{owl:Nothing} è la sottoclasse di chiunque 
+
+\subsection{Proprietà di OWL}
+Esistono due tipi di proprietà:
+\begin{itemize}
+	\item \textbf{Object properties}: lega oggetti ad oggetti.
+	\item \textbf{Data type properties}: lega oggetti a tipi di dato.
+\end{itemize}
+Si possono definire proprietà inverse con \textbf{owl:inverseOf}. Le proprietà simmetriche (\textbf{owl:SymmetricProperty}) sono \textbf{owl:ObjectProperty} che se sono vere da un verso lo sono anche nell'altro (isMarriedTo). Le proprietà asimmetriche (\textbf{owl:AsymmetricProperty}) sono proprietà che non possono essere vere in entrambi i versi (hasChild). Il motore inferenziale genererà tutte le triple.
+
+\noindent Da OWL2 sono state aggiunte proprietà riflessive, cioè instanze del dominio possono essere anche nel range (\textbf{owl:ReflexiveProperty}) e irriflessive cioè instanze del dominio possono essere anche nel range (\textbf{owl:IrreflexiveProperty}).
+
+\noindent Si possono dichiarare proprietà transitive(\textbf{TransitiveProperty}), quindi se \textbf{a p b} e \textbf{b p c} allora \textbf{a p c}. \textbf{rdfs:subClassOf} e \textbf{rdfs:subpropertyOf} sono transitive.
+
+\noindent Le proprietà funzionali (\textbf{owl:FunctionalProperty}) implicano che può esistere un solo oggetto per ogni soggetto legato dalla proprietà. Quindi se \textbf{s p o1} e \textbf{s p o2} allora \textbf{o1 owl:sameAs o2}. Se è il soggetto a dover essere unico esiste la (\textbf{owl:InverseFunctionalProperty})
+
+\subsection{Individui}
+\textbf{owl:sameAs} viene utilizzato per dire che due individui sono lo stesso individuo. Si può utilizzare \textbf{owl:allDifferent} per specificare che individui in una collezione sono tutti diversi tra loro. Si tratta di un'operazione oneshot. Si può anche specificare la non eguaglianza dei singoli indivisui attraverso \textbf{owl:differentFrom}.
