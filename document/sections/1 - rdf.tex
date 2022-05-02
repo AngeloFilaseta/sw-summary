@@ -12,9 +12,9 @@ RDF è composto da due documenti:
 	\item \textbf{RDF Schema}: espone la sintassi per definire schemi e vocabolari di metainformazioni.
 \end{itemize}
 \subsection{RDF Triples}
-Una tripla racchiude un significato, una vera e propria frase. Un grafo RDF è una congiunzione (AND logico) delle sue triple. 
+Una tripla racchiude un significato, una vera e propria frase. Un grafo RDF è una congiunzione (AND logico) delle sue triple.
 \begin{itemize}
-	\item \textbf{Implicazione (Entailment)}: Un grafo $A$ implica un grafo $B$ se ogni possibile arrangiamento che risulta vero nel grafo $A$ è vero anche nel grafo $B$ (questo significa che non esistono contradizioni tra i due grafi). 
+	\item \textbf{Implicazione (Entailment)}: Un grafo $A$ implica un grafo $B$ se ogni possibile arrangiamento che risulta vero nel grafo $A$ è vero anche nel grafo $B$ (questo significa che non esistono contradizioni tra i due grafi).
 	\item \textbf{Equivalenza (Equivalence)}: Due grafi $A$ e $B$ sono equivalenti se $A$ implica $B$ e $B$ implica $A$.
 	\item \textbf{Inconsistenza (Inconsistency)}: Un grafo è inconsistente se contiene una contradizione al suo interno. Non esiste un arrangiamento per avere a true un espressione.
 \end{itemize}
@@ -25,8 +25,8 @@ Avendo a disposizione altre fonti è possibile effettuare un'operazione di "Merg
 a partire da quelli iniziali. Essendo una risorse univocamente determinata dal suo URI, due risorse sono la stessa risorsa solo se l'URI è identico. Grazie all'URI possiamo anche accedere alla semantica della risorsa, ovvero a tutte le altre informazioni che la risorsa porta con se.\newline
 La risorsa è univocamente determinata anche dal suo namespace, ovvero alla locazione, il dataset di riferimento, eccone alcuni dei primissimi:
 \begin{itemize}
-	\item \textbf{rdf} : Indica gli identificatori usati in RDF. L'URI globale per lo spazio dei nomi rdf è:\newline \url{http://www.w3.org/1999/02/22-rdf-syntax-ns#} 
-	\item \textbf{rdfs} : Indica gli identificatori usati per RDFS. L'URI globale per lo spazio dei nomi rdfs è:\newline \url{http://www.w3.org/2000/01/rdf-schema#} 
+	\item \textbf{rdf} : Indica gli identificatori usati in RDF. L'URI globale per lo spazio dei nomi rdf è:\newline \url{http://www.w3.org/1999/02/22-rdf-syntax-ns#}
+	\item \textbf{rdfs} : Indica gli identificatori usati per RDFS. L'URI globale per lo spazio dei nomi rdfs è:\newline \url{http://www.w3.org/2000/01/rdf-schema#}
 	\item \textbf{skos}: Indica gli identificatori usati per il Simple Knowledge Organization System (SKOS), uno schema per la gestione distribuita dei vocabolari sul Web. L'URI globale per SKOS è:\newline
 	\url{http://www.w3.org/2004/02/skos/core}
 	\item \textbf{owl}: Indica gli identificatori usati per OWL. L'URI globale per lo spazio dei nomi OWL è:\newline
@@ -36,7 +36,7 @@ La risorsa è univocamente determinata anche dal suo namespace, ovvero alla loca
 \paragraph{Risorse}
 Possiamo pensare ad una risorsa come ad un oggetto, una cosa (un libro, un autore, una città etc.). Ogni risorsa è identificata da un URI.
 \paragraph{Proprietà}
-Le proprietà sono tipi speciali di risorse. Esse descrivono relazioni tra risorse (è stato scritto da, età, titolo etc.) e quindi anche loro sono contraddistinte da un URI. 
+Le proprietà sono tipi speciali di risorse. Esse descrivono relazioni tra risorse (è stato scritto da, età, titolo etc.) e quindi anche loro sono contraddistinte da un URI.
 \paragraph{Statements}
 Gli statements sono le triple di tipo "Soggetto"-"Predicato"-"Oggetto", consistono in una \textbf{Risorsa}, una \textbf{Proprietà} ed un \textbf{Valore}, dove i valori possono essere sia altre risorse che dei literals (stringe, numeri, date etc.)
 \paragraph{Blank Nodes}
@@ -125,7 +125,7 @@ Le definizioni cominciano ad essere abbastanza verbose. Esistono regole per semp
 			<rdf:type rdf:resource="http://www.mydomain.org/unins#course"/>
 			<uni:courseName>Discrete Maths</uni:courseName>
 			</rdf:Description>
-			
+
 			<rdf:Description rdf:ID="CIT1111" uni:courseName="Discrete Maths">
 			<rdf:type rdf:resource="http://www.mydomain.org/unins#course"/>
 			</rdf:Description>
@@ -138,7 +138,7 @@ Le definizioni cominciano ad essere abbastanza verbose. Esistono regole per semp
 			<rdf:type rdf:resource="http://www.mydomain.org/unins#course"/>
 			<uni:courseName>Discrete Maths</uni:courseName>
 			</rdf:Description>
-			
+
 			<uni:course rdf:ID="CIT1111">
 			<uni:courseName>Discrete Maths</uni:courseName>
 			</uni:course>
@@ -180,7 +180,7 @@ Turtle è una serializzazione differente e più coincisa rispetto ad XML. Anche 
 	\item Si può utilizzare lo stesso soggetto per definire più triple in una volta sola, grazie all'uso di \textbf{;}:
 	\begin{info}[Esempio]
 		\begin{minted}{turtle}
-			doc:sw dcs:name "The Semantic Web"; 
+			doc:sw dcs:name "The Semantic Web";
 			dcs:isTaughtBy dcs:MZ .
 		\end{minted}
 	\end{info}

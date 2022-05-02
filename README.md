@@ -2,15 +2,15 @@
 
 Summary for the Semantic Web Course (2021/2022)
 
-## License 
+## License
 This template originates from [LaTeXTemplates](http://www.LaTeXTemplates.com)
 #### Started from:
-__Lachaise Assignment__  
+__Lachaise Assignment__
 Original Authors:
 
 - Marion Lachaise
 - François Févotte
-  
+
 Vel (vel@LaTeXTemplates.com)
 
 Changes from the original template are listed in the ```layout.tex``` file.

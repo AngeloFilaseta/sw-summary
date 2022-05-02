@@ -1,7 +1,7 @@
 \section{La logica di RDF e RDFS}
 Si può analizzare la rappresentazione della conoscenza intenta a rappresentare la realtà su tre livelli differenti:
 \begin{itemize}
-	\item \textbf{un modello concreto}: ci permette di esprimere fatti (Alice è la madre di Bob etc.). Questo modello è a tutti gli effetti RDF. 
+	\item \textbf{un modello concreto}: ci permette di esprimere fatti (Alice è la madre di Bob etc.). Questo modello è a tutti gli effetti RDF.
 	\item \textbf{un modello concettuale}: ci permette di esprimere conoscenze su ciò di cui stiamo parlando (conoscenze terminologiche, ovvero cosa rappresenta uno specifico termine o una specifica regola). Questo modello è a tutti gli effetti RDFS, che però non è del tutto sufficiente e serve un linguaggio più riggo (es: Owl).
 	\item \textbf{un metamodello}: specifica degli strumenti formali utilizzati per definire il modello concettuale e il concreto.
 \end{itemize}
@@ -38,13 +38,13 @@ L'unico che può essere implementato e su cui si basano tutti i ragionamenti log
 	\end{enumerate}
 	Si può dedurre come conclusione che: \textbf{Laura è una MADRE}\newline\newline
 	Trasponiamo:
-	
+
 	Regola: $\forall x \quad (MADRE(x) \leftarrow\rightarrow DONNA(x) \land \exists y \quad GenDI(x,y)$
-	
+
 	$DONNA($Laura$)$
 	$GenDI($Laura, Franco$)$\newline
 	Quindi applicando su Laura la regola possiamo dire che lei è madre solo se deduciamo che lei è sia una donna che genitore di un qualche $y$:
-	
+
 	$(MADRE($Laura$) \leftarrow\rightarrow DONNA($Laura$) \land \exists y \quad GenDI($Laura$,$y$)$\newline
 	Deduciamo se esiste un y:
 	$\exists y \quad GenDI($Laura$,$y$)$
